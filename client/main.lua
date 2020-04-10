@@ -89,14 +89,26 @@ Citizen.CreateThread(function()
 
 				if v.size then size = v.size end
 				if v.locked then displayText = _U('locked') end
-				if v.isAuthorized then displayText = _U('press_button', displayText) end
+				if v.isAuthorized then 
+					displayText = _U('press_button', displayText) 
+				elseif not v.isAuthorized and v.locked and v.canLockpick then
+					displayText = _U("press_button_lockpick") .. "\n" .. displayText
+			    end
 
-				ESX.Game.Utils.DrawText3D(v.textCoords, displayText, size)
+				ESX.Game.Utils.DrawText3D(v.textCoords, displayText, 0.5)
 
 				if IsControlJustReleased(0, 38) then
 					if v.isAuthorized then
 						v.locked = not v.locked
 						TriggerServerEvent('esx_doorlock:updateState', k, v.locked) -- broadcast new state of the door to everyone
+					elseif not v.isAuthorized and v.canLockpick and v.locked then
+						ESX.TriggerServerCallback("esx_doorlock:hasItem", function (hasItem) 
+							if hasItem then
+								startLockpick(v, k)
+							else
+								ESX.ShowNotification(_U("no_lockpick"))
+							end
+						end, "lockpick")
 					end
 				end
 			end
@@ -107,6 +119,47 @@ Citizen.CreateThread(function()
 		end
 	end
 end)
+
+function startLockpick(door, index)
+	local chance = math.random() * 100
+	local playerPed = GetPlayerPed(-1)
+	local coords = GetEntityCoords(playerPed)
+
+	 playAnim()
+
+	 if door.objHash and door.objHash == 631614199 then
+		exports['progressBars']:startUI(Config.LockpickTime * 1000 + Config.CellLockpickTime * 1000, _U("lockpicking"))
+		Citizen.Wait(Config.CellLockpickTime * 1000)
+	 else
+		exports['progressBars']:startUI(Config.LockpickTime * 1000, _U("lockpicking"))
+		Citizen.Wait(Config.LockpickTime * 1000)	
+	 end
+
+	if chance <= 30 then
+		door.locked = not door.locked
+		TriggerServerEvent('esx_doorlock:updateState', index, door,locked)
+		ESX.ShowNotification(_U("success"))
+	elseif chance <= 85 then
+		ESX.ShowNotification(_U("failed"))
+	else
+		ESX.ShowNotification(_U("overtime"))
+		Citizen.Wait(Config.LockpickOvertime * 1000)
+		door.locked = not door.locked
+		TriggerServerEvent('esx_doorlock:updateState', index, door,locked)
+		ESX.ShowNotification(_U("success"))
+	end
+
+	ClearPedTasksImmediately(GetPlayerPed(-1))
+	TriggerServerEvent('esx_doorlock:removeItem', 'lockpick', 1)
+end
+
+function playAnim()
+	RequestAnimDict('anim@amb@clubhouse@tutorial@bkr_tut_ig3@')
+        while not HasAnimDictLoaded('anim@amb@clubhouse@tutorial@bkr_tut_ig3@') do
+            Citizen.Wait(0)
+        end
+	 TaskPlayAnim(GetPlayerPed(-1), 'anim@amb@clubhouse@tutorial@bkr_tut_ig3@' , 'machinic_loop_mechandplayer' ,8.0, -8.0, -1, 1, 0, false, false, false)
+end
 
 function isAuthorized(door)
 	if not ESX or not ESX.PlayerData.job then

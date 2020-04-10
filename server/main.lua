@@ -13,6 +13,17 @@ AddEventHandler('esx_doorlock:updateState', function(doorIndex, state)
 	end
 end)
 
+ESX.RegisterServerCallback("esx_doorlock:hasItem", function(source, cb, item)
+    local xPlayer = ESX.GetPlayerFromId(source)
+    local item = xPlayer.getInventoryItem(item)["count"]
+
+    if item >= 1 then
+        cb(true)
+    else
+        cb(false)
+    end
+end)
+
 ESX.RegisterServerCallback('esx_doorlock:getDoorState', function(source, cb)
 	cb(doorState)
 end)
