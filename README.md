@@ -3,9 +3,15 @@ This is a door lock script for ESX, which is used to lock certain doors that sho
 
 This script was originally developed by Darklandz, later modified by Miss_Behavin and others.
 
+### Dependencies
+[progressBar](https://github.com/torpidity/progressBars)
+
+You can remove progressBar and edit lines: 139 and 136
+
 ### Features
 - Well optimized script
 - Supports mutliple jobs for each door
+- Lockpickable doors and configuration
 
 ## Download & Installation
 
