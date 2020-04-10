@@ -24,6 +24,12 @@ ESX.RegisterServerCallback("esx_doorlock:hasItem", function(source, cb, item)
     end
 end)
 
+RegisterServerEvent("esx_doorlock:removeItem")
+AddEventHandler('esx_doorlock:removeItem', function(item, count)
+	local xPlayer = ESX.GetPlayerFromId(source)
+	xPlayer.removeInventoryItem(item, count)
+end)
+
 ESX.RegisterServerCallback('esx_doorlock:getDoorState', function(source, cb)
 	cb(doorState)
 end)
