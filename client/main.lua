@@ -160,13 +160,13 @@ function startLockpick(door, index)
 	if chance == 1 or chance == 2 then
 		changeDoorState(index, true)
 		message = _U("success")
-	-- elseif chance == 3 then
-	-- 	Citizen.Wait(100)
-	-- 	ESX.ShowNotification(_U("overtime"))
-	-- 	exports['progressBars']:startUI(Config.LockpickOvertime * 1000, _U("lockpicking"))
-	-- 	Citizen.Wait(Config.LockpickOvertime * 1000)
-	-- 	changeDoorState(index, true)
-	-- 	message = _U("success")
+	elseif chance == 3 then
+		Citizen.Wait(100)
+		ESX.ShowNotification(_U("overtime"))
+		exports['progressBars']:startUI(Config.LockpickOvertime * 1000, _U("lockpicking"))
+		Citizen.Wait(Config.LockpickOvertime * 1000)
+		changeDoorState(index, true)
+		message = _U("success")
 	else
 		message = _U("failed")
 	end
