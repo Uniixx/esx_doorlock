@@ -3,15 +3,9 @@ This is a door lock script for ESX, which is used to lock certain doors that sho
 
 This script was originally developed by Darklandz, later modified by Miss_Behavin and others.
 
-### Dependencies
-[progressBar](https://github.com/torpidity/progressBars)
-
-You can remove progressBar and edit lines: 139 and 136
-
 ### Features
 - Well optimized script
 - Supports mutliple jobs for each door
-- Lockpickable doors and configuration
 
 ## Download & Installation
 
@@ -48,3 +42,6 @@ This program Is free software: you can redistribute it And/Or modify it under th
 This program Is distributed In the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty Of MERCHANTABILITY Or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License For more details.
 
 You should have received a copy Of the GNU General Public License along with this program. If Not, see http://www.gnu.org/licenses/.
+
+# Known Issues
+When user lockpick and stop It doesn't actually stops the timer.
