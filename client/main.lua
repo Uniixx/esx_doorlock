@@ -158,16 +158,18 @@ function startLockpick(door, index)
 	Citizen.Wait(waitTime)	
 
 	if chance == 1 or chance == 2 then
-		changeDoorState(index, true)
+		changeDoorState(index, door)
 		message = _U("success")
 	elseif chance == 3 then
 		Citizen.Wait(100)
 		ESX.ShowNotification(_U("overtime"))
 		exports['progressBars']:startUI(Config.LockpickOvertime * 1000, _U("lockpicking"))
 		Citizen.Wait(Config.LockpickOvertime * 1000)
-		changeDoorState(index, true)
+		changeDoorState(index, door)
 		message = _U("success")
 	else
+		isLockpicking = false
+		TriggerServerEvent('esx_doorlock:updateLockpick', index, false) 
 		message = _U("failed")
 	end
 
@@ -177,11 +179,12 @@ function startLockpick(door, index)
 	TriggerServerEvent('esx_doorlock:removeItem', 'lockpick', 1)
 end
 
-function changeDoorState(index, state)
+function changeDoorState(index, door)
 	if not isLockpicking then return end
 	isLockpicking = false
+	door.locked = not door.locked
 	TriggerServerEvent('esx_doorlock:updateLockpick', index, false) 
-	TriggerServerEvent('esx_doorlock:updateState', index, state)
+	TriggerServerEvent('esx_doorlock:updateState', index, door)
 end
 
 function playAnim()
